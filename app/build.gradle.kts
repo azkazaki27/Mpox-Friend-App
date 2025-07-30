@@ -1,6 +1,16 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+}
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.inputStream().use { input ->
+        localProperties.load(input)
+    }
 }
 
 android {
@@ -15,10 +25,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        buildConfigField("String", "BASE_URL", "\"http://192.168.92.238:8001/\"")
-        //buildConfigField("String", "BASE_URL", "\"http://17.17.17.226:8001/\"")
-    }
+       }
 
     buildTypes {
         release {
@@ -27,12 +34,12 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "BASE_URL", "\"http://192.168.92.238:8001/\"")
-            //buildConfigField("String", "BASE_URL", "\"http://17.17.17.226:8001/\"")
+            val releaseBaseUrl = System.getenv("RENDER_BASE_URL") ?: "https://api.example.com/"
+            buildConfigField("String", "BASE_URL", "\"$releaseBaseUrl\"")
         }
         debug {
-            buildConfigField("String", "BASE_URL", "\"http://192.168.92.238:8001/\"")
-            //buildConfigField("String", "BASE_URL", "\"http://17.17.17.226:8001/\"")}
+            val debugBaseUrl = localProperties.getProperty("API_BASE_URL_DEBUG") ?: "http://10.0.2.2:8001/"
+            buildConfigField("String", "BASE_URL", "\"$debugBaseUrl\"")
         }
     }
     compileOptions {

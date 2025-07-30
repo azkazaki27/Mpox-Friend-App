@@ -237,7 +237,6 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        // --- MODIFIKASI: Gunakan apiClient yang sudah diinisialisasi ---
         val client = apiClient
 
         val requestBody = MultipartBody.Builder()
@@ -250,7 +249,7 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         val request = Request.Builder()
-            .url(apiPredictUrl) // --- MODIFIKASI: Gunakan apiPredictUrl ---
+            .url(apiPredictUrl)
             .post(requestBody)
             .build()
 
